@@ -19,7 +19,7 @@ export type SearchResultType = {
   coord: [number, number];
 };
 
-const APARTMENTS = [
+const APARTMENTS: SearchResultType[] = [
   {
     id: "1f2d3f4g",
     title: "Aspen Heights Amherst",
