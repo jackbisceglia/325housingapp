@@ -2,6 +2,9 @@
 module.exports = {
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
+    backgroundImage: {
+      map: "url('/Map.png')",
+    },
     extend: {
       colors: {
         primary: "#DB073D",

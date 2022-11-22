@@ -56,7 +56,8 @@ const Map = ({ results }: { results: SearchResultType[] }) => {
   };
 
   return (
-    <div className="relative h-[32rem] w-[55%] rounded-md border-4 border-marooon-700">
+    // <div className="relative h-[32rem] w-[55%] rounded-md border-4 border-marooon-700">
+    <div className="relative max-h-[75vh]  w-1/2 rounded-md border-4 border-marooon-700 bg-black bg-map bg-cover">
       {coords
         .map(([x, y]) => mapCoords([x, y]))
         .map(([x, y], i) => {
@@ -64,7 +65,7 @@ const Map = ({ results }: { results: SearchResultType[] }) => {
           return <MapIcon x={x} y={y} key={i} />;
         })}
       <div className="left-96"></div>
-      <Image
+      {/* <Image
         priority
         src="/Map.png"
         sizes="(max-width: 768px) 100vw,
@@ -73,7 +74,7 @@ const Map = ({ results }: { results: SearchResultType[] }) => {
         alt="map"
         className="w-full rounded-md"
         fill
-      />
+      /> */}
     </div>
   );
 };
@@ -207,7 +208,7 @@ const SearchResults = ({
 
   return (
     <div
-      className="max-h-[33rem] flex-grow overflow-y-scroll pr-3"
+      className="max-h-[75vh] flex-grow overflow-y-scroll pr-3"
       style={{ objectFit: "contain" }}
     >
       {handleFetchState()}

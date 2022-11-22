@@ -93,7 +93,7 @@ const SearchBar = ({
   filters: filtersType;
 }) => {
   return (
-    <div className=" flex w-full flex-col items-center justify-center bg-marooon-50 py-1 px-6 sm:flex-row sm:items-center sm:justify-between lg:px-40">
+    <div className=" flex max-h-[10vh] w-full flex-col items-center justify-center bg-marooon-50 py-1 px-6 sm:flex-row sm:items-center sm:justify-between lg:px-40">
       <div className="mr-4 flex items-center">
         <SewingPinIcon
           className=" absolute ml-2 text-marooon-700"
