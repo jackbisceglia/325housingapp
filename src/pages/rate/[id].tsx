@@ -68,24 +68,36 @@ const RateQuestion = ({
   const updateStarRating = (i: number) => {
     updateRating(num, i + 1);
   };
+
+  const vals = ["awful", "bad", "ok", "good", "awesome"];
   return (
     <form className="flex w-full flex-col items-center justify-center gap-2 rounded-md border-4 border-marooon-700 bg-gray-300 py-2 px-6">
       <h1 className="text-2xl font-black text-marooon-700">{question}</h1>
-      <button
-        onClick={(e) => e.preventDefault()}
-        className="rounded-md bg-marooon-700  px-3 pb-[0.125rem] text-white"
-      >
-        {[...new Array(5).fill(0)].map((_, i) => (
-          <Star
-            h={30}
-            w={30}
-            i={i}
-            key={i}
-            rating={starRtng}
-            updateRating={updateStarRating}
-          />
-        ))}
-      </button>
+      <div className="flex w-full items-center justify-center">
+        <p className="inline-block text-lg text-marooon-700">awful</p>
+        <button
+          onClick={(e) => e.preventDefault()}
+          className="mx-4 rounded-md bg-marooon-700 px-6 py-2 text-white"
+        >
+          {[...new Array(5).fill(0)].map((_, i) => (
+            <Star
+              h={30}
+              w={30}
+              i={i}
+              key={i}
+              rating={starRtng}
+              updateRating={updateStarRating}
+            />
+          ))}
+        </button>
+        <p className="inline-block text-lg">awesome</p>
+      </div>
+      <p className="text-xl text-marooon-700">
+        selected:{" "}
+        <span className="font-extrabold">
+          {starRtng === 0 ? "none" : vals[starRtng - 1]}
+        </span>
+      </p>
     </form>
   );
 };
@@ -158,7 +170,7 @@ const PageContent = ({ data }: { data: SearchResultType }) => {
 
   return (
     <>
-      <div className="flex w-1/2 flex-col gap-2">
+      <div className="flex w-1/2 flex-col gap-3">
         <div className="flex w-full gap-2 rounded-md border-4 border-marooon-700 bg-gray-300 py-2 px-3">
           <div className="flex-grow">
             <h1 className="py-2 text-4xl font-bold text-marooon-700">
@@ -221,13 +233,37 @@ const PageContent = ({ data }: { data: SearchResultType }) => {
           Submit
         </button>
       </div>
-      <div className="w-1/2">
+      <div className="flex w-1/2 flex-col gap-[0.94rem]">
         <RateQuestion
           num={0}
           starRtng={formStarRatings[0] ?? 0}
           updateRating={updateFormStarRatings}
           question="Rate My Price"
         />
+        <RateQuestion
+          num={1}
+          starRtng={formStarRatings[1] ?? 0}
+          updateRating={updateFormStarRatings}
+          question="Rate My Location"
+        />
+        <RateQuestion
+          num={2}
+          starRtng={formStarRatings[2] ?? 0}
+          updateRating={updateFormStarRatings}
+          question="Rate My Cleanliness"
+        />
+        <RateQuestion
+          num={3}
+          starRtng={formStarRatings[3] ?? 0}
+          updateRating={updateFormStarRatings}
+          question="Rate My Campus Accessibility"
+        />
+        <button
+          onClick={() => setFormStarRatings([0, 0, 0, 0])}
+          className="marooon-700 w-full rounded-md bg-marooon-700 py-2 text-2xl text-white transition-all duration-100 hover:bg-marooon-800"
+        >
+          Submit
+        </button>
       </div>
     </>
   );
