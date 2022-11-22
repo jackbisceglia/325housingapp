@@ -10,12 +10,14 @@ import { trpc } from "../../utils/trpc";
 
 const CDN_URL = "https://res.cloudinary.com/demo/image/fetch/";
 const Star = ({
+  dontHover,
   h,
   w,
   i,
   rating,
   updateRating,
 }: {
+  dontHover?: boolean;
   i: number;
   h: number;
   w: number;
@@ -27,13 +29,21 @@ const Star = ({
     return (
       <StarFilledIcon
         onClick={() => {
+          if (dontHover) {
+            return;
+          }
           if (rating === i + 1) {
             updateRating(i - 1);
           } else {
             updateRating(i);
           }
         }}
-        onMouseLeave={() => setHover(false)}
+        onMouseLeave={() => {
+          if (dontHover) {
+            return;
+          }
+          setHover(false);
+        }}
         key={i}
         className="mx-[0.25rem] inline p-0"
         height={h}
@@ -43,8 +53,18 @@ const Star = ({
   } else {
     return (
       <StarIcon
-        onClick={() => updateRating(i)}
-        onMouseEnter={() => setHover(true)}
+        onClick={() => {
+          if (dontHover) {
+            return;
+          }
+          updateRating(i);
+        }}
+        onMouseEnter={() => {
+          if (dontHover) {
+            return;
+          }
+          setHover(true);
+        }}
         key={i}
         className="mx-[0.25rem] inline p-0"
         height={h}
@@ -143,6 +163,7 @@ const YesNo = ({
 };
 
 const PageContent = ({ data }: { data: SearchResultType }) => {
+  const [formSubmitted, setFormSubmitted] = useState(false);
   const [yesNoValues, setYesNoValues] = useState<string[]>([
     "",
     "",
@@ -186,11 +207,14 @@ const PageContent = ({ data }: { data: SearchResultType }) => {
               {[...new Array(5).fill(0)].map((_, i) => (
                 <Star
                   h={18}
+                  dontHover={true}
                   w={18}
                   i={i}
                   key={i}
-                  rating={starRtng}
-                  updateRating={updateRating}
+                  rating={data.rating}
+                  updateRating={() => {
+                    return;
+                  }}
                 />
               ))}
             </button>
@@ -226,12 +250,11 @@ const PageContent = ({ data }: { data: SearchResultType }) => {
           num={3}
           question="Is Washer/Dryer Included?"
         />
-        <button
-          onClick={() => setYesNoValues(["", "", "", ""])}
-          className="marooon-700 w-full rounded-md bg-marooon-700 py-2 text-2xl text-white transition-all duration-100 hover:bg-marooon-800"
-        >
-          Submit
-        </button>
+        {formSubmitted && (
+          <p className="w-full text-center text-lg font-bold text-green-800">
+            Successfully Submitted
+          </p>
+        )}
       </div>
       <div className="flex w-1/2 flex-col gap-[0.94rem]">
         <RateQuestion
@@ -259,7 +282,11 @@ const PageContent = ({ data }: { data: SearchResultType }) => {
           question="Rate My Campus Accessibility"
         />
         <button
-          onClick={() => setFormStarRatings([0, 0, 0, 0])}
+          onClick={() => {
+            setFormStarRatings([0, 0, 0, 0]);
+            setYesNoValues(["", "", "", ""]);
+            setFormSubmitted(true);
+          }}
           className="marooon-700 w-full rounded-md bg-marooon-700 py-2 text-2xl text-white transition-all duration-100 hover:bg-marooon-800"
         >
           Submit
