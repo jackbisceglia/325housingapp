@@ -22,4 +22,10 @@ module.exports = {
     },
   },
   plugins: [],
+  safelist: [
+    { pattern: /left-./ },
+    { pattern: /right-./ },
+    { pattern: /top-./ },
+    { pattern: /bottom-./ },
+  ],
 };

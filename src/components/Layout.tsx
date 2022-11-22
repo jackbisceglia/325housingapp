@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 const Navbar = () => {
   return (
@@ -12,48 +13,14 @@ const Navbar = () => {
   );
 };
 
-const Footer = () => {
-  return (
-    <footer>
-      <div className="mx-auto w-full max-w-screen-md">
-        <div className="grid w-full grid-cols-2 gap-8 py-8 px-6 md:grid-cols-3">
-          <div>
-            <h3>Title</h3>
-            <div>
-              <li>
-                <Link href="/about" className="inline hover:underline">
-                  About
-                </Link>
-              </li>
-              <li>
-                <Link href="/contact" className="inline hover:underline">
-                  Contact
-                </Link>
-              </li>
-              <li>
-                <Link
-                  target="_blank"
-                  href="https://github.com/joepetrillo/hackumass-2022"
-                  className="inline hover:underline"
-                >
-                  Contribute
-                </Link>
-              </li>
-            </div>
-          </div>
-        </div>
-      </div>
-    </footer>
-  );
-};
-
 const Layout = ({ children }: { children: React.ReactNode }) => {
+  const excludedPaths = ["/login", "/signup"];
+  const router = useRouter();
   return (
-    <>
-      <Navbar />
+    <div className="h-screen">
+      {!excludedPaths.includes(router.asPath) && <Navbar />}
       <main className="mx-auto">{children}</main>
-      {/* <Footer /> */}
-    </>
+    </div>
   );
 };
 
