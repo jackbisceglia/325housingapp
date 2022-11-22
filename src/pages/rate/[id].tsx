@@ -50,15 +50,19 @@ const Star = ({
   }
 };
 
+const RateQuestion = () => {
+  return <h1>test</h1>;
+};
+
 const YesNo = ({ question }: { question: string }) => {
   return (
     <form className="flex w-full justify-between gap-2 rounded-md border-4 border-marooon-700 bg-gray-300 py-2 px-6">
       <h1 className="text-2xl font-semibold text-marooon-700">{question}</h1>
-      <div className="align-center flex h-full w-min items-center justify-center text-lg">
+      <div className="align-center flex h-full w-min items-center justify-center text-center text-xl text-marooon-700">
         <label htmlFor="">Yes</label>
-        <input type="radio" />
+        <input type="radio" className="ml-2 mr-4" />
         <label htmlFor="">No</label>
-        <input type="radio" />
+        <input type="radio" className="ml-2 mr-4" />
       </div>
     </form>
   );
@@ -72,7 +76,7 @@ const PageContent = ({ data }: { data: SearchResultType }) => {
 
   return (
     <>
-      <div className="flex w-1/2 flex-col gap-4">
+      <div className="flex w-1/2 flex-col gap-2">
         <div className="flex w-full gap-2 rounded-md border-4 border-marooon-700 bg-gray-300 py-2 px-3">
           <div className="flex-grow">
             <h1 className="py-2 text-4xl font-bold text-marooon-700">
@@ -80,7 +84,7 @@ const PageContent = ({ data }: { data: SearchResultType }) => {
             </h1>
             <p className="text-xl text-marooon-700">{data.address}</p>
           </div>
-          <div className="flex flex-col items-center justify-center gap-1 self-stretch">
+          <div className="flex flex-col items-center justify-between gap-1 self-stretch">
             <button className="w-full rounded-md bg-marooon-700 px-4 py-1 text-slate-50 hover:bg-marooon-800">
               favorite
             </button>
@@ -103,6 +107,12 @@ const PageContent = ({ data }: { data: SearchResultType }) => {
           className="h-60"
         />
         <YesNo question="Am I Pet Friendly?" />
+        <YesNo question="Are Utilities Included?" />
+        <YesNo question="Would You Rent Again?" />
+        <YesNo question="Is Washer/Dryer Included?" />
+        <button className="marooon-700 w-full rounded-md bg-marooon-700 py-2 text-2xl text-white transition-all duration-100 hover:bg-marooon-800">
+          Submit
+        </button>
       </div>
       <div className="w-1/2">right side</div>
     </>
