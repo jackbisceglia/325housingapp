@@ -28,19 +28,47 @@ const defaultFilters: filtersType = {
   more: undefined,
 };
 
-const MapIcon = ({ x, y }: { x?: string; y?: string }) => {
+const MapIcon = ({
+  x,
+  y,
+  id,
+  isHover,
+}: {
+  id: string;
+  isHover: boolean;
+  x?: string;
+  y?: string;
+}) => {
   return (
     <StarFilledIcon
-      className={`absolute ${x} ${y} z-10 text-marooon-500 transition-colors duration-200 hover:text-marooon-400`}
-      height={40}
-      width={40}
+      className={`absolute ${x} ${y} z-10 text-red-${
+        isHover ? "500" : "900"
+      } transition-all duration-200 hover:text-marooon-400 ${
+        isHover && "scale-125"
+      }`}
+      height={38}
+      width={38}
     />
   );
 };
 
-const Map = ({ results }: { results: SearchResultType[] }) => {
-  const coords = results.map((result) => result.coord);
-  const mapCoords = ([x, y]: [number, number]) => {
+const Map = ({
+  results,
+  hovers,
+  handleHovers,
+}: {
+  results: SearchResultType[];
+  hovers: Record<string, boolean>;
+  handleHovers: (isEntering: boolean, id: string) => void;
+}) => {
+  const coords = results.map((result) => {
+    return {
+      coord: result.coord,
+      id: result.id,
+    };
+  });
+
+  const mapCoords = ([x, y]: [number, number], id: string) => {
     const coordStyle = ["", ""];
 
     if (x === 0.5) {
@@ -52,29 +80,26 @@ const Map = ({ results }: { results: SearchResultType[] }) => {
     }
     coordStyle[1] = y > 96 ? `bottom-${y - 96}` : `top-${y}`;
 
-    return coordStyle;
+    return { coordStyle, id };
   };
 
   return (
-    // <div className="relative h-[32rem] w-[55%] rounded-md border-4 border-marooon-700">
-    <div className="relative max-h-[75vh]  w-1/2 rounded-md border-4 border-marooon-700 bg-black bg-map bg-cover">
+    <div className="relative h-[75vh]  w-1/2 rounded-md border-4 border-marooon-700 bg-black bg-map bg-cover">
       {coords
-        .map(([x, y]) => mapCoords([x, y]))
-        .map(([x, y], i) => {
-          console.log(x, y);
-          return <MapIcon x={x} y={y} key={i} />;
+        .map(({ coord, id }) => mapCoords(coord, id))
+        .map(({ coordStyle, id }, i) => {
+          console.log(hovers[id] === true);
+          return (
+            <MapIcon
+              id={id}
+              x={coordStyle[0]}
+              y={coordStyle[1]}
+              key={i}
+              isHover={hovers[id] === true}
+            />
+          );
         })}
       <div className="left-96"></div>
-      {/* <Image
-        priority
-        src="/Map.png"
-        sizes="(max-width: 768px) 100vw,
-              (max-width: 1200px) 50vw,
-              33vw"
-        alt="map"
-        className="w-full rounded-md"
-        fill
-      /> */}
     </div>
   );
 };
@@ -120,14 +145,28 @@ const Star = ({
   }
 };
 
-const ResultCard = ({ searchResult }: { searchResult: SearchResultType }) => {
+const ResultCard = ({
+  id,
+  searchResult,
+  hovers,
+  handleHovers,
+}: {
+  id: string;
+  hovers: Record<string, boolean>;
+  handleHovers: (isEntering: boolean, id: string) => void;
+  searchResult: SearchResultType;
+}) => {
   const [starRtng, setStarRtng] = useState(0);
   const updateRating = (i: number) => {
     setStarRtng(i + 1);
   };
 
   return (
-    <div className="mb-4 flex w-full flex-col rounded-md border-4 border-marooon-700 bg-gray-300 px-3 py-2">
+    <div
+      onMouseEnter={() => handleHovers(true, id)}
+      onMouseLeave={() => handleHovers(false, id)}
+      className="mb-4 flex w-full flex-col rounded-md border-4 border-marooon-700 bg-gray-300 px-3 py-2"
+    >
       <h1 className="text-2xl font-bold text-marooon-700">
         {searchResult.title}
       </h1>
@@ -183,7 +222,11 @@ const SearchResults = ({
   results,
   isLoading,
   isError,
+  hovers,
+  handleHovers,
 }: {
+  hovers: Record<string, boolean>;
+  handleHovers: (isEntering: boolean, id: string) => void;
   results: SearchResultType[];
   isLoading: boolean;
   isError: boolean;
@@ -201,7 +244,13 @@ const SearchResults = ({
       );
     } else {
       return results.map((searchResult) => (
-        <ResultCard searchResult={searchResult} key={searchResult.id} />
+        <ResultCard
+          searchResult={searchResult}
+          key={searchResult.id}
+          hovers={hovers}
+          handleHovers={handleHovers}
+          id={searchResult.id}
+        />
       ));
     }
   };
@@ -226,8 +275,23 @@ const Home: NextPage = () => {
     isError,
   } = trpc.search.searchApartments.useQuery(
     { ...filters },
-    { queryKey: ["search.searchApartments", filters] }
+    {
+      queryKey: ["search.searchApartments", filters],
+      onSuccess: (data) => {
+        const obj: Record<string, boolean> = {};
+        data.forEach(({ id }) => {
+          obj[id] = false;
+        });
+        setHovers(obj);
+      },
+    }
   );
+  const [hovers, setHovers] = useState({});
+
+  const handleHover = (isEntering: boolean, id: string) => {
+    const newHovers = { ...filters, [id]: isEntering };
+    setHovers(newHovers);
+  };
 
   // console.log(filters);
   const handleFilterSearch = useCallback(
@@ -246,8 +310,14 @@ const Home: NextPage = () => {
       </Head>
       <SearchBar filters={filters} updateFilters={handleFilterSearch} />
       <div className="flex w-full gap-4 py-4 px-6 lg:px-36">
-        <Map results={searchResults ?? []} />
+        <Map
+          results={searchResults ?? []}
+          hovers={hovers}
+          handleHovers={handleHover}
+        />
         <SearchResults
+          hovers={hovers}
+          handleHovers={handleHover}
           isLoading={isLoading}
           isError={isError}
           results={searchResults ?? []}

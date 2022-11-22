@@ -30,5 +30,6 @@ module.exports = {
     { pattern: /right-./ },
     { pattern: /top-./ },
     { pattern: /bottom-./ },
+    { pattern: /text-./ },
   ],
 };

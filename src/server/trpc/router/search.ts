@@ -113,7 +113,9 @@ export const searchRouter = router({
     )
     .query(({ input }) => {
       const results = APARTMENTS.filter((a) => {
+        console.log(input);
         for (const [filter, selection] of Object.entries(input)) {
+          console.log(filter, selection);
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           if (filter === "more" && selection && !a?.[selection]) {
@@ -134,5 +136,11 @@ export const searchRouter = router({
       });
 
       return results;
+    }),
+  getApartmentById: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(({ input }) => {
+      console.log(input);
+      return APARTMENTS.find((a) => a.id === input.id);
     }),
 });

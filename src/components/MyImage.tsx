@@ -13,6 +13,7 @@ const MyImage = ({ src, alt, className = "" }: MyImagePropTypes) => {
         className=" drag- select-none rounded-md border-4 border-marooon-700"
         src={src}
         alt={alt}
+        style={{ objectFit: "cover" }}
         layout="fill"
       />
     </div>
