@@ -3,6 +3,7 @@ import { z } from "zod";
 import { router, publicProcedure } from "../trpc";
 
 export type SearchResultType = {
+  type: "house" | "apartment";
   id: string;
   title: string;
   address: string;
@@ -21,6 +22,7 @@ export type SearchResultType = {
 
 const APARTMENTS: SearchResultType[] = [
   {
+    type: "apartment",
     id: "1f2d3f4g",
     title: "Aspen Heights Amherst",
     address: "408 Northhampton Rd, Amherst, MA 01002",
@@ -37,6 +39,7 @@ const APARTMENTS: SearchResultType[] = [
     coord: [72, 28],
   },
   {
+    type: "house",
     id: "1f2k7f4h",
     title: "Modern Townhouse",
     address: "70 Amity Place, Amherst, MA 01002",
@@ -52,6 +55,7 @@ const APARTMENTS: SearchResultType[] = [
     coord: [0.01, 140],
   },
   {
+    type: "house",
     id: "5r6k7f4e",
     title: "91 State Street",
     address: "91 State Street, Amherst, MA 01002",
@@ -67,6 +71,7 @@ const APARTMENTS: SearchResultType[] = [
     coord: [96, 56],
   },
   {
+    type: "apartment",
     id: "9d2k2g4h",
     title: "Olympia Place Apartments",
     address: "57 Olympia Drive, Amherst, MA 01002",
@@ -84,6 +89,7 @@ const APARTMENTS: SearchResultType[] = [
     coord: [192, 140],
   },
   {
+    type: "apartment",
     id: "7d8w1g4h",
     title: "The Boulders Apartments",
     address: "156A Brittany Manor Drive, Amherst, MA 01002",
@@ -219,5 +225,13 @@ export const searchRouter = router({
     .query(({ input }) => {
       console.log(input);
       return APARTMENTS.find((a) => a.id === input.id);
+    }),
+  getApartmentComparisons: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(({ input }) => {
+      return {
+        primary: APARTMENTS.find((a) => a.id === input.id),
+        rest: APARTMENTS.filter((a) => a.id !== input.id),
+      };
     }),
 });
