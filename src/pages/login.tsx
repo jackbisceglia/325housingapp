@@ -36,7 +36,7 @@ const Login: NextPage = () => {
             <label className="text-xl text-marooon-700  " htmlFor="">
               password
             </label>
-            <input className="w-full rounded-md p-2" type="text" />
+            <input className="w-full rounded-md p-2" type="password" />
           </div>
 
           <Link

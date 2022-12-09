@@ -42,13 +42,13 @@ const Signup: NextPage = () => {
             <label className="text-xl text-marooon-700  " htmlFor="">
               password
             </label>
-            <input className="w-full rounded-md p-2" type="text" />
+            <input className="w-full rounded-md p-2" type="password" />
           </div>
           <div className="w-9/12 py-2">
             <label className="text-xl text-marooon-700  " htmlFor="">
               confirm password
             </label>
-            <input className="w-full rounded-md p-2" type="text" />
+            <input className="w-full rounded-md p-2" type="password" />
           </div>
           <Link
             href="/"
